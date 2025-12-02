@@ -2,953 +2,1408 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚫ BLACK TERMINAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BLACK TERMINAL | Trading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ОСНОВНЫЕ СТИЛИ */
+        /* ===== CUSTOM PROPERTIES ===== */
         :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: #111118;
-            --bg-panel: #0d0d14;
-            --border: #22222a;
-            --primary: #00d4ff;
-            --success: #00ff88;
-            --danger: #ff3366;
-            --warning: #ffaa00;
-            --text: #ffffff;
-            --text-secondary: #888899;
-            --gradient-dark: linear-gradient(135deg, #0a0a0f 0%, #151522 100%);
-            --gradient-card: linear-gradient(135deg, #111118 0%, #1a1a22 100%);
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            /* Цветовая палитра */
+            --black: #000000;
+            --dark-1: #0A0A0F;
+            --dark-2: #111118;
+            --dark-3: #1A1A22;
+            --gray-1: #2A2A33;
+            --gray-2: #3A3A44;
+            --gray-3: #555566;
+            --light: #FFFFFF;
+            --light-2: #CCCCDD;
+            
+            /* Акцентные цвета */
+            --primary: #00D4FF;
+            --primary-dark: #0099CC;
+            --success: #00FF88;
+            --success-dark: #00CC66;
+            --danger: #FF3366;
+            --danger-dark: #CC0044;
+            --warning: #FFAA00;
+            --warning-dark: #CC8800;
+            
+            /* Градиенты */
+            --gradient-dark: linear-gradient(145deg, var(--dark-1) 0%, var(--black) 100%);
+            --gradient-card: linear-gradient(145deg, var(--dark-2) 0%, var(--dark-3) 100%);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
+            
+            /* Тени */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(0, 212, 255, 0.2);
+            
+            /* Типографика */
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+            
+            /* Бордеры */
+            --border-radius-sm: 6px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 16px;
+            --border: 1px solid rgba(255, 255, 255, 0.08);
+            --border-light: 1px solid rgba(255, 255, 255, 0.12);
         }
-        
+
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        
+
         html, body {
             height: 100%;
+            width: 100%;
             overflow: hidden;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
+            font-family: var(--font-main);
+            background: var(--black);
+            color: var(--light);
+            font-size: 14px;
+            line-height: 1.5;
         }
-        
+
         body {
             background: var(--gradient-dark);
-            display: flex;
-            flex-direction: column;
-            padding: 0;
+            position: relative;
         }
-        
-        /* СКРОЛЛБАР */
+
+        /* Глобальные скроллбары */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
-        
+
         ::-webkit-scrollbar-track {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 3px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: linear-gradient(var(--primary), var(--success));
             border-radius: 3px;
+            transition: all 0.2s;
         }
-        
-        /* HEADER */
-        .header {
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 16px;
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--primary-dark), var(--success-dark));
+        }
+
+        /* ===== LAYOUT ===== */
+        .app-container {
+            height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-            box-shadow: var(--shadow);
+            flex-direction: column;
             position: relative;
-            z-index: 100;
+            overflow: hidden;
         }
-        
-        .logo {
+
+        /* ===== HEADER ===== */
+        .app-header {
+            flex-shrink: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--border);
+            padding: 0 20px;
+            height: 64px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
         }
-        
-        .logo h1 {
-            font-size: 18px;
-            font-weight: 600;
-            background: linear-gradient(90deg, var(--primary), var(--success));
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black);
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--light), var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
-        
-        .balance-stats {
+
+        .balance-section {
             display: flex;
-            gap: 20px;
             align-items: center;
+            gap: 24px;
         }
-        
+
         .balance-item {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
-        
+
         .balance-label {
             font-size: 11px;
-            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: var(--gray-3);
             margin-bottom: 2px;
-        }
-        
-        .balance-value {
-            font-size: 16px;
             font-weight: 600;
         }
-        
+
+        .balance-value {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
         .balance-value.positive {
             color: var(--success);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
-        
+
         .balance-value.negative {
             color: var(--danger);
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
         }
-        
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
-        .main-container {
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
         }
-        
-        /* ПАНЕЛЬ ГРАФИКА */
+
+        /* ===== CHART SECTION ===== */
         .chart-section {
             flex: 0 0 55vh;
-            min-height: 300px;
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
+            min-height: 400px;
+            background: var(--dark-2);
+            border-bottom: var(--border);
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        
+
         .chart-header {
-            padding: 12px 16px;
+            padding: 0 20px;
+            height: 56px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: var(--border);
         }
-        
+
         .symbol-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .symbol-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-mono);
+        }
+
+        .price-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        
-        .symbol-name {
-            font-size: 18px;
-            font-weight: 600;
+
+        .current-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-mono);
         }
-        
-        .price-info {
+
+        .price-change {
+            padding: 6px 12px;
+            border-radius: var(--border-radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-change.positive {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .price-change.negative {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .chart-controls {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        
-        .current-price {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .price-change {
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .price-change.positive {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--success);
-        }
-        
-        .price-change.negative {
-            background: rgba(255, 51, 102, 0.1);
-            color: var(--danger);
-        }
-        
-        .chart-tools {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .tool-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text);
+
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: var(--border);
+            color: var(--light-2);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-        
-        .tool-btn:hover {
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .control-btn.active {
             background: var(--primary);
             border-color: var(--primary);
+            color: var(--black);
         }
-        
+
         .chart-container {
             flex: 1;
             position: relative;
+            overflow: hidden;
         }
-        
+
         #tradingview_chart {
             width: 100%;
             height: 100%;
         }
-        
-        /* ПАНЕЛЬ РЫНКОВ */
+
+        /* ===== MARKETS SECTION ===== */
         .markets-section {
             flex: 0 0 25vh;
             min-height: 200px;
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
+            background: var(--dark-2);
+            border-bottom: var(--border);
             display: flex;
             flex-direction: column;
         }
-        
+
         .markets-header {
-            padding: 12px 16px;
+            padding: 0 20px;
+            height: 48px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: var(--border);
         }
-        
+
         .markets-title {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: var(--primary);
         }
-        
+
         .market-search {
             width: 200px;
-            padding: 8px 12px;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--light);
+            font-size: 13px;
+            font-family: var(--font-main);
+            transition: all 0.2s;
         }
-        
+
+        .market-search:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
         .markets-grid {
             flex: 1;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 8px;
-            padding: 12px;
+            gap: 12px;
+            padding: 20px;
             overflow-y: auto;
         }
-        
+
         .market-card {
             background: var(--gradient-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
+            border: var(--border);
+            border-radius: var(--border-radius-md);
+            padding: 16px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .market-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
         .market-card:hover {
             border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-lg);
         }
-        
+
+        .market-card:hover::before {
+            transform: translateX(100%);
+        }
+
         .market-card.active {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 212, 255, 0.05) 100%);
+            border-color: var(--success);
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.05));
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
         }
-        
+
         .market-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
-        
+
         .market-symbol {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-mono);
         }
-        
+
         .market-price {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-mono);
         }
-        
+
         .market-card-body {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .market-name {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .market-change {
             font-size: 12px;
-            font-weight: 600;
+            color: var(--gray-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }
-        
+
+        .market-change {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
         .market-change.positive {
+            background: rgba(0, 255, 136, 0.1);
             color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
-        
+
         .market-change.negative {
+            background: rgba(255, 51, 102, 0.1);
             color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.2);
         }
-        
-        /* ПАНЕЛЬ ТОРГОВЛИ */
+
+        /* ===== TRADE SECTION ===== */
         .trade-section {
-            flex: 0 0 auto;
-            background: var(--bg-panel);
+            flex: 1;
+            background: var(--dark-2);
             display: flex;
             flex-direction: column;
+            min-height: 300px;
         }
-        
+
         .trade-header {
-            padding: 12px 16px;
+            padding: 0 20px;
+            height: 56px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: var(--border);
         }
-        
+
         .trade-tabs {
             display: flex;
-            gap: 1px;
-            background: var(--border);
-            border-radius: 6px;
-            overflow: hidden;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+            padding: 2px;
         }
-        
+
         .trade-tab {
-            padding: 10px 20px;
-            background: var(--bg-card);
+            padding: 10px 24px;
+            background: transparent;
             border: none;
-            color: var(--text-secondary);
+            color: var(--gray-3);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
         }
-        
+
         .trade-tab:hover {
-            color: var(--text);
+            color: var(--light);
         }
-        
+
         .trade-tab.active {
             background: var(--primary);
-            color: var(--bg-dark);
-            font-weight: 600;
+            color: var(--black);
+            box-shadow: var(--shadow-sm);
         }
-        
-        .position-info {
+
+        .current-trading {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        
-        .current-position {
+
+        .trading-label {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: var(--gray-3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        .position-symbol {
-            font-weight: 600;
-            color: var(--text);
+
+        .trading-symbol {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-mono);
         }
-        
+
         .trade-content {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
-        
-        /* ФОРМА ОРДЕРА */
+
+        /* ===== ORDER FORM ===== */
         .order-form {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
         }
-        
+
         .position-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 8px;
         }
-        
+
         .position-btn {
-            padding: 14px;
-            border-radius: 8px;
-            border: 2px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 600;
+            padding: 20px;
+            border-radius: var(--border-radius-md);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--light-2);
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .position-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .position-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .position-btn:hover::before {
+            opacity: 1;
+        }
+
         .position-btn.long.active {
             border-color: var(--success);
-            background: rgba(0, 255, 136, 0.1);
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.05));
             color: var(--success);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
         }
-        
+
         .position-btn.short.active {
             border-color: var(--danger);
-            background: rgba(255, 51, 102, 0.1);
+            background: linear-gradient(145deg, rgba(255, 51, 102, 0.1), rgba(0, 212, 255, 0.05));
             color: var(--danger);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.2);
         }
-        
-        .input-row {
+
+        .position-icon {
+            font-size: 24px;
+        }
+
+        .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 20px;
         }
-        
+
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
-        
+
         .input-label {
             font-size: 12px;
-            color: var(--text-secondary);
-            font-weight: 500;
+            color: var(--gray-3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
+
+        .input-label span {
+            color: var(--light);
+            font-family: var(--font-mono);
+        }
+
         .input-field {
-            padding: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 14px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--light);
+            font-size: 16px;
             font-weight: 500;
+            font-family: var(--font-mono);
+            transition: all 0.2s;
         }
-        
+
         .input-field:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+            background: rgba(255, 255, 255, 0.05);
         }
-        
-        .percent-buttons {
+
+        .percent-selector {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin-top: 8px;
         }
-        
+
         .percent-btn {
-            padding: 8px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-secondary);
-            font-size: 12px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--light-2);
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
         }
-        
+
         .percent-btn:hover {
-            background: var(--primary);
-            color: var(--bg-dark);
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
         }
-        
+
+        .percent-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--black);
+        }
+
         .order-summary {
-            background: var(--gradient-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: var(--border);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
             margin-top: 8px;
         }
-        
+
         .summary-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
+
         .summary-row:last-child {
             border-bottom: none;
+            padding-top: 15px;
+            margin-top: 5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+        }
+
+        .summary-label {
+            color: var(--gray-3);
+            font-size: 13px;
+        }
+
+        .summary-value {
+            font-family: var(--font-mono);
             font-weight: 600;
-            padding-top: 8px;
-            margin-top: 8px;
-            border-top: 1px solid var(--border);
         }
-        
+
         .order-action {
-            margin-top: 16px;
+            margin-top: 24px;
         }
-        
+
         .order-btn {
             width: 100%;
-            padding: 16px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: var(--border-radius-md);
             border: none;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .order-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .order-btn:hover::before {
+            left: 100%;
+        }
+
         .order-btn.long {
-            background: var(--success);
-            color: #000;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: var(--black);
         }
-        
-        .order-btn.short {
-            background: var(--danger);
-            color: #fff;
-        }
-        
-        .order-btn:hover {
-            opacity: 0.9;
+
+        .order-btn.long:hover {
             transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
         }
-        
-        /* ПОЗИЦИИ */
-        .positions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 300px;
-            overflow-y: auto;
+
+        .order-btn.short {
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            color: var(--light);
         }
-        
-        .position-card {
-            background: var(--gradient-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
+
+        .order-btn.short:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.3);
         }
-        
-        .position-card-header {
+
+        /* ===== POSITIONS ===== */
+        .positions-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .positions-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: var(--border);
         }
-        
-        .position-symbol-info {
+
+        .positions-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .positions-count {
+            font-size: 14px;
+            color: var(--gray-3);
+            font-family: var(--font-mono);
+        }
+
+        .positions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .position-card {
+            background: var(--gradient-card);
+            border: var(--border);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .position-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .position-info {
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        
-        .position-symbol {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .position-type {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .position-type.long {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--success);
-        }
-        
-        .position-type.short {
-            background: rgba(255, 51, 102, 0.1);
-            color: var(--danger);
-        }
-        
-        .position-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin-bottom: 12px;
         }
-        
-        .stat-item {
+
+        .position-symbol {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--light);
+            font-family: var(--font-mono);
+        }
+
+        .position-type {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .position-type.long {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .position-type.short {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .position-leverage {
+            font-size: 12px;
+            color: var(--gray-3);
+            font-family: var(--font-mono);
+        }
+
+        .position-pnl {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .position-pnl.positive {
+            color: var(--success);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .position-pnl.negative {
+            color: var(--danger);
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+        }
+
+        .position-details {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .detail-item {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
-        
-        .stat-label {
+
+        .detail-label {
             font-size: 11px;
-            color: var(--text-secondary);
-        }
-        
-        .stat-value {
-            font-size: 13px;
+            color: var(--gray-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             font-weight: 500;
         }
-        
-        .position-pnl {
-            text-align: center;
-            font-size: 16px;
+
+        .detail-value {
+            font-size: 14px;
             font-weight: 600;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 8px;
+            color: var(--light);
+            font-family: var(--font-mono);
         }
-        
-        .position-pnl.positive {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--success);
-        }
-        
-        .position-pnl.negative {
-            background: rgba(255, 51, 102, 0.1);
-            color: var(--danger);
-        }
-        
+
         .position-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 12px;
         }
-        
+
         .action-btn {
             flex: 1;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text);
-            font-size: 12px;
+            padding: 12px;
+            border-radius: var(--border-radius-sm);
+            border: var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--light-2);
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
         .action-btn:hover {
-            background: var(--primary);
+            background: rgba(0, 212, 255, 0.1);
             border-color: var(--primary);
-            color: var(--bg-dark);
+            color: var(--primary);
         }
-        
+
         .action-btn.close {
             background: rgba(255, 51, 102, 0.1);
+            border-color: rgba(255, 51, 102, 0.3);
             color: var(--danger);
         }
-        
-        /* УВЕДОМЛЕНИЯ */
+
+        .action-btn.close:hover {
+            background: rgba(255, 51, 102, 0.2);
+            border-color: var(--danger);
+        }
+
+        /* ===== NOTIFICATIONS ===== */
         .notification {
             position: fixed;
-            top: 20px;
+            top: 80px;
             right: 20px;
-            left: 20px;
-            padding: 16px;
-            border-radius: 8px;
+            padding: 16px 24px;
+            border-radius: var(--border-radius-md);
             background: var(--gradient-card);
-            border: 1px solid var(--border);
-            color: var(--text);
+            border: var(--border);
+            color: var(--light);
             font-weight: 500;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            text-align: center;
-            box-shadow: var(--shadow);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
+            box-shadow: var(--shadow-lg);
+            max-width: 350px;
+            backdrop-filter: blur(10px);
         }
-        
-        @keyframes slideIn {
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.1), rgba(10, 10, 15, 0.9));
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+            background: linear-gradient(145deg, rgba(255, 51, 102, 0.1), rgba(10, 10, 15, 0.9));
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--primary);
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.1), rgba(10, 10, 15, 0.9));
+        }
+
+        @keyframes slideInRight {
             from {
-                transform: translateY(-20px);
+                transform: translateX(100%);
                 opacity: 0;
             }
             to {
-                transform: translateY(0);
+                transform: translateX(0);
                 opacity: 1;
             }
         }
-        
-        /* АДАПТИВНОСТЬ */
-        @media (max-width: 768px) {
-            .header {
-                padding: 10px;
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .markets-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             }
             
-            .logo h1 {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .position-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 0 15px;
+                height: 56px;
+            }
+            
+            .logo-text {
                 font-size: 16px;
             }
             
-            .balance-stats {
-                gap: 12px;
+            .balance-section {
+                gap: 15px;
             }
             
             .balance-value {
-                font-size: 14px;
+                font-size: 16px;
             }
             
-            .markets-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-            
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .position-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .trade-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .trade-tab {
-                padding: 8px 12px;
-                font-size: 12px;
-            }
-        }
-        
-        @media (max-width: 480px) {
             .chart-section {
                 flex: 0 0 50vh;
+                min-height: 350px;
             }
             
             .markets-section {
                 flex: 0 0 30vh;
+                min-height: 250px;
             }
             
             .markets-grid {
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .trade-tabs {
+                padding: 1px;
+            }
+            
+            .trade-tab {
+                padding: 8px 16px;
+                font-size: 12px;
             }
             
             .position-selector {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
             
-            .percent-buttons {
+            .percent-selector {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-header {
+                flex-direction: column;
+                height: auto;
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            .logo-section {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .balance-section {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .chart-header,
+            .markets-header,
+            .trade-header {
+                padding: 0 12px;
+            }
+            
+            .trade-content {
+                padding: 15px;
+            }
+            
+            .order-form {
+                gap: 15px;
+            }
+            
+            .position-btn {
+                padding: 16px;
+                font-size: 14px;
+            }
+            
+            .order-btn {
+                padding: 16px;
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="header">
-        <div class="logo">
-            <h1>⚫ BLACK TERMINAL</h1>
-        </div>
-        
-        <div class="balance-stats">
-            <div class="balance-item">
-                <div class="balance-label">БАЛАНС</div>
-                <div class="balance-value" id="totalBalance">$10,000.00</div>
-            </div>
-            <div class="balance-item">
-                <div class="balance-label">PNL СЕГОДНЯ</div>
-                <div class="balance-value positive" id="dailyPnl">+$450.30</div>
-            </div>
-        </div>
-    </header>
-    
-    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
-    <div class="main-container">
-        <!-- ПАНЕЛЬ ГРАФИКА -->
-        <section class="chart-section">
-            <div class="chart-header">
-                <div class="symbol-info">
-                    <div class="symbol-name" id="currentSymbol">BTC/USDT</div>
-                    <div class="price-info">
-                        <div class="current-price" id="currentPrice">$42,150.30</div>
-                        <div class="price-change positive" id="priceChange">+2.5%</div>
-                    </div>
-                </div>
-                <div class="chart-tools">
-                    <button class="tool-btn" title="Полный экран" onclick="toggleFullscreen()">⛶</button>
-                    <button class="tool-btn" title="Обновить" onclick="refreshChart()">↻</button>
-                </div>
-            </div>
-            <div class="chart-container">
-                <div id="tradingview_chart"></div>
-            </div>
-        </section>
-        
-        <!-- ПАНЕЛЬ РЫНКОВ -->
-        <section class="markets-section">
-            <div class="markets-header">
-                <div class="markets-title">РЫНКИ</div>
-                <input type="text" class="market-search" placeholder="Поиск..." id="marketSearch">
-            </div>
-            <div class="markets-grid" id="marketGrid">
-                <!-- Рыночные карточки загрузятся через JS -->
-            </div>
-        </section>
-        
-        <!-- ПАНЕЛЬ ТОРГОВЛИ -->
-        <section class="trade-section">
-            <div class="trade-header">
-                <div class="trade-tabs">
-                    <button class="trade-tab active" onclick="switchTab('order')">ОРДЕР</button>
-                    <button class="trade-tab" onclick="switchTab('positions')">ПОЗИЦИИ</button>
-                </div>
-                <div class="position-info">
-                    <div class="current-position">ТОРГУЕМ:</div>
-                    <div class="position-symbol" id="tradeSymbol">BTC/USDT</div>
-                </div>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo-section">
+                <div class="logo-icon">B</div>
+                <div class="logo-text">BLACK TERMINAL</div>
             </div>
             
-            <!-- ВКЛАДКА ОРДЕР -->
-            <div class="trade-content" id="orderTab">
-                <form class="order-form" onsubmit="placeOrder(event)">
-                    <div class="position-selector">
-                        <button type="button" class="position-btn long active" onclick="selectPositionType('long')">LONG</button>
-                        <button type="button" class="position-btn short" onclick="selectPositionType('short')">SHORT</button>
+            <div class="balance-section">
+                <div class="balance-item">
+                    <div class="balance-label">БАЛАНС</div>
+                    <div class="balance-value" id="totalBalance">$10,000.00</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-label">PNL СЕГОДНЯ</div>
+                    <div class="balance-value positive" id="dailyPnl">+$450.30</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- CHART SECTION -->
+            <section class="chart-section">
+                <div class="chart-header">
+                    <div class="symbol-info">
+                        <div class="symbol-name" id="currentSymbol">BTC/USDT</div>
+                        <div class="price-info">
+                            <div class="current-price" id="currentPrice">$42,150.30</div>
+                            <div class="price-change positive" id="priceChange">+2.5%</div>
+                        </div>
                     </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label class="input-label">ОБЪЕМ (USDT)</label>
-                            <input type="number" class="input-field" id="orderAmount" value="100" step="10" min="10" required>
-                            <div class="percent-buttons">
-                                <button type="button" class="percent-btn" onclick="setOrderAmount(25)">25%</button>
-                                <button type="button" class="percent-btn" onclick="setOrderAmount(50)">50%</button>
-                                <button type="button" class="percent-btn" onclick="setOrderAmount(75)">75%</button>
-                                <button type="button" class="percent-btn" onclick="setOrderAmount(100)">100%</button>
+                    <div class="chart-controls">
+                        <button class="control-btn" onclick="toggleFullscreen()" title="Полный экран">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="control-btn" onclick="refreshChart()" title="Обновить">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="control-btn" onclick="toggleTheme()" title="Сменить тему">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div id="tradingview_chart"></div>
+                </div>
+            </section>
+            
+            <!-- MARKETS SECTION -->
+            <section class="markets-section">
+                <div class="markets-header">
+                    <div class="markets-title">РЫНОКИ</div>
+                    <input type="text" class="market-search" placeholder="Поиск пары..." id="marketSearch">
+                </div>
+                <div class="markets-grid" id="marketGrid">
+                    <!-- Markets will be loaded dynamically -->
+                </div>
+            </section>
+            
+            <!-- TRADE SECTION -->
+            <section class="trade-section">
+                <div class="trade-header">
+                    <div class="trade-tabs">
+                        <button class="trade-tab active" onclick="switchTab('order')">ОРДЕР</button>
+                        <button class="trade-tab" onclick="switchTab('positions')">ПОЗИЦИИ</button>
+                        <button class="trade-tab" onclick="switchTab('history')">ИСТОРИЯ</button>
+                    </div>
+                    <div class="current-trading">
+                        <div class="trading-label">ТОРГУЕМ:</div>
+                        <div class="trading-symbol" id="tradeSymbol">BTC/USDT</div>
+                    </div>
+                </div>
+                
+                <!-- ORDER TAB -->
+                <div class="trade-content" id="orderTab">
+                    <form class="order-form" onsubmit="placeOrder(event)">
+                        <div class="position-selector">
+                            <button type="button" class="position-btn long active" onclick="selectPositionType('long')">
+                                <div class="position-icon">▲</div>
+                                <div>LONG</div>
+                            </button>
+                            <button type="button" class="position-btn short" onclick="selectPositionType('short')">
+                                <div class="position-icon">▼</div>
+                                <div>SHORT</div>
+                            </button>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label class="input-label">
+                                    ОБЪЕМ (USDT)
+                                    <span id="availableBalance">$8,500.00</span>
+                                </label>
+                                <input type="number" class="input-field" id="orderAmount" value="100" step="10" min="10" required>
+                                <div class="percent-selector">
+                                    <button type="button" class="percent-btn" onclick="setOrderAmount(25)">25%</button>
+                                    <button type="button" class="percent-btn" onclick="setOrderAmount(50)">50%</button>
+                                    <button type="button" class="percent-btn" onclick="setOrderAmount(75)">75%</button>
+                                    <button type="button" class="percent-btn" onclick="setOrderAmount(100)">100%</button>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">
+                                    ПЛЕЧО
+                                    <span id="leverageValue">3x</span>
+                                </label>
+                                <input type="range" class="input-field" id="leverage" min="1" max="10" step="1" value="3" oninput="updateLeverageValue()">
                             </div>
                         </div>
                         
-                        <div class="input-group">
-                            <label class="input-label">ПЛЕЧО</label>
-                            <input type="number" class="input-field" id="leverage" value="3" step="1" min="1" max="10" required>
-                        </div>
-                    </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label class="input-label">СТОП-ЛОСС (USDT)</label>
-                            <input type="number" class="input-field" id="stopLoss" value="40000">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label class="input-label">СТОП-ЛОСС (USDT)</label>
+                                <input type="number" class="input-field" id="stopLoss" value="40000">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">ТЕЙК-ПРОФИТ (USDT)</label>
+                                <input type="number" class="input-field" id="takeProfit" value="44000">
+                            </div>
                         </div>
                         
-                        <div class="input-group">
-                            <label class="input-label">ТЕЙК-ПРОФИТ (USDT)</label>
-                            <input type="number" class="input-field" id="takeProfit" value="44000">
+                        <div class="order-summary">
+                            <div class="summary-row">
+                                <span class="summary-label">Маржа (USDT):</span>
+                                <span class="summary-value" id="marginAmount">$33.33</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Комиссия (0.1%):</span>
+                                <span class="summary-value" id="feeAmount">$0.10</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Итого:</span>
+                                <span class="summary-value" id="totalAmount">$33.43</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="order-summary">
-                        <div class="summary-row">
-                            <span>Маржа:</span>
-                            <span id="marginAmount">$33.33</span>
+                        
+                        <div class="order-action">
+                            <button type="submit" class="order-btn long" id="orderButton">
+                                <i class="fas fa-bolt"></i> ОТКРЫТЬ LONG
+                            </button>
                         </div>
-                        <div class="summary-row">
-                            <span>Комиссия (0.1%):</span>
-                            <span id="feeAmount">$0.10</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Итого:</span>
-                            <span id="totalAmount">$33.43</span>
-                        </div>
-                    </div>
-                    
-                    <div class="order-action">
-                        <button type="submit" class="order-btn long" id="orderButton">ОТКРЫТЬ LONG</button>
-                    </div>
-                </form>
-            </div>
-            
-            <!-- ВКЛАДКА ПОЗИЦИИ -->
-            <div class="trade-content" id="positionsTab" style="display: none;">
-                <div class="positions-list" id="positionsList">
-                    <!-- Позиции загрузятся через JS -->
+                    </form>
                 </div>
-            </div>
-        </section>
+                
+                <!-- POSITIONS TAB -->
+                <div class="trade-content" id="positionsTab" style="display: none;">
+                    <div class="positions-container">
+                        <div class="positions-header">
+                            <div class="positions-title">ОТКРЫТЫЕ ПОЗИЦИИ</div>
+                            <div class="positions-count" id="positionsCount">0 позиций</div>
+                        </div>
+                        <div class="positions-grid" id="positionsList">
+                            <!-- Positions will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- HISTORY TAB -->
+                <div class="trade-content" id="historyTab" style="display: none;">
+                    <div class="positions-container">
+                        <div class="positions-header">
+                            <div class="positions-title">ИСТОРИЯ СДЕЛОК</div>
+                        </div>
+                        <div class="positions-grid" id="historyList">
+                            <div style="text-align: center; padding: 40px; color: var(--gray-3);">
+                                <i class="fas fa-history" style="font-size: 48px; margin-bottom: 16px;"></i>
+                                <div>История сделок появится здесь</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
-    
-    <!-- УВЕДОМЛЕНИЯ -->
+
+    <!-- NOTIFICATION -->
     <div id="notification" class="notification" style="display: none;"></div>
 
     <!-- TRADINGVIEW -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     
+    <!-- MAIN SCRIPT -->
     <script>
-        // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
-        const terminalState = {
+        // ==================== STATE MANAGEMENT ====================
+        const TerminalState = {
+            // Баланс
             balance: 10000.00,
             freeBalance: 8500.00,
             dailyPnl: 450.30,
-            positions: [],
+            
+            // Текущий рынок
             currentSymbol: 'BTCUSDT',
+            currentSymbolName: 'Bitcoin',
             currentPrice: 42150.30,
-            positionType: 'long'
+            currentChange: 2.5,
+            
+            // Позиции
+            positions: [],
+            history: [],
+            
+            // Настройки
+            positionType: 'long',
+            leverage: 3,
+            
+            // TradingView виджет
+            tvWidget: null
         };
-        
-        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+
+        // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 BLACK TERMINAL v1.0 - Initializing...');
+            
+            // Инициализация TradingView
             initTradingView();
+            
+            // Загрузка данных
             loadMarkets();
             loadPositions();
+            
+            // Обновление UI
             updateBalanceDisplay();
             updateOrderSummary();
             
-            // Обновляем цену каждые 5 секунд (симуляция)
-            setInterval(updatePrices, 5000);
+            // Установка интервалов обновления
+            setInterval(updateMarketPrices, 3000);
+            setInterval(updatePositionsPnL, 2000);
             
-            // Обновляем PNL позиций каждые 3 секунды
-            setInterval(updatePositionsPnL, 3000);
+            // Инициализация событий
+            initEventListeners();
+            
+            console.log('✅ BLACK TERMINAL v1.0 - Ready!');
         });
-        
+
         // ==================== TRADINGVIEW ====================
         function initTradingView() {
-            window.tvWidget = new TradingView.widget({
+            TerminalState.tvWidget = new TradingView.widget({
                 "container_id": "tradingview_chart",
                 "width": "100%",
                 "height": "100%",
-                "symbol": "BINANCE:BTCUSDT",
+                "symbol": `BINANCE:${TerminalState.currentSymbol}`,
                 "interval": "15",
                 "timezone": "Europe/Moscow",
                 "theme": "dark",
                 "style": "1",
                 "locale": "ru",
-                "toolbar_bg": "#0d0d14",
+                "toolbar_bg": "#0A0A0F",
                 "enable_publishing": false,
                 "hide_side_toolbar": false,
                 "allow_symbol_change": true,
@@ -956,44 +1411,54 @@
                 "studies": [
                     "MASimple@tv-basicstudies",
                     "RSI@tv-basicstudies",
-                    "BB@tv-basicstudies"
+                    "BB@tv-basicstudies",
+                    "Volume@tv-basicstudies"
                 ],
                 "disabled_features": [
                     "header_symbol_search",
-                    "use_localstorage_for_settings"
+                    "use_localstorage_for_settings",
+                    "header_compare",
+                    "header_saveload"
                 ],
                 "enabled_features": [
                     "study_templates",
-                    "move_logo_to_main_pane"
-                ]
+                    "move_logo_to_main_pane",
+                    "side_toolbar_in_fullscreen"
+                ],
+                "overrides": {
+                    "mainSeriesProperties.style": 1,
+                    "mainSeriesProperties.candleStyle.upColor": "#00FF88",
+                    "mainSeriesProperties.candleStyle.downColor": "#FF3366",
+                    "mainSeriesProperties.candleStyle.borderUpColor": "#00FF88",
+                    "mainSeriesProperties.candleStyle.borderDownColor": "#FF3366",
+                    "mainSeriesProperties.candleStyle.wickUpColor": "#00FF88",
+                    "mainSeriesProperties.candleStyle.wickDownColor": "#FF3366"
+                }
             });
         }
-        
+
         function refreshChart() {
-            if (window.tvWidget) {
-                window.tvWidget.setSymbol(terminalState.currentSymbol, '15');
+            if (TerminalState.tvWidget) {
+                TerminalState.tvWidget.setSymbol(`BINANCE:${TerminalState.currentSymbol}`, '15');
             }
-            showNotification('График обновлен');
+            showNotification('График обновлен', 'info');
         }
-        
+
         function toggleFullscreen() {
             const chartContainer = document.querySelector('.chart-container');
             if (!document.fullscreenElement) {
-                if (chartContainer.requestFullscreen) {
-                    chartContainer.requestFullscreen();
-                } else if (chartContainer.webkitRequestFullscreen) {
-                    chartContainer.webkitRequestFullscreen();
-                }
+                chartContainer.requestFullscreen?.().catch(console.log);
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                document.exitFullscreen?.();
             }
         }
-        
-        // ==================== РЫНКИ ====================
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            showNotification('Тема изменена', 'info');
+        }
+
+        // ==================== MARKETS ====================
         function loadMarkets() {
             const markets = [
                 { symbol: 'BTCUSDT', name: 'Bitcoin', price: 42150.30, change: 2.5 },
@@ -1003,19 +1468,22 @@
                 { symbol: 'ADAUSDT', name: 'Cardano', price: 0.58, change: -1.2 },
                 { symbol: 'DOTUSDT', name: 'Polkadot', price: 8.24, change: 0.5 },
                 { symbol: 'BNBUSDT', name: 'Binance Coin', price: 305.20, change: 0.3 },
-                { symbol: 'DOGEUSDT', name: 'Dogecoin', price: 0.085, change: -0.2 }
+                { symbol: 'DOGEUSDT', name: 'Dogecoin', price: 0.085, change: -0.2 },
+                { symbol: 'AVAXUSDT', name: 'Avalanche', price: 36.75, change: 1.2 },
+                { symbol: 'LINKUSDT', name: 'Chainlink', price: 14.20, change: 0.7 }
             ];
-            
+
             const marketGrid = document.getElementById('marketGrid');
             marketGrid.innerHTML = '';
-            
+
             markets.forEach(market => {
                 const card = document.createElement('div');
-                card.className = `market-card ${market.symbol === terminalState.currentSymbol ? 'active' : ''}`;
+                card.className = `market-card ${market.symbol === TerminalState.currentSymbol ? 'active' : ''}`;
                 card.dataset.symbol = market.symbol;
+                card.dataset.name = market.name;
                 card.dataset.price = market.price;
                 card.dataset.change = market.change;
-                
+
                 card.innerHTML = `
                     <div class="market-card-header">
                         <div class="market-symbol">${market.symbol}</div>
@@ -1024,68 +1492,101 @@
                     <div class="market-card-body">
                         <div class="market-name">${market.name}</div>
                         <div class="market-change ${market.change >= 0 ? 'positive' : 'negative'}">
-                            ${market.change >= 0 ? '+' : ''}${market.change}%
+                            ${market.change >= 0 ? '+' : ''}${market.change.toFixed(2)}%
                         </div>
                     </div>
                 `;
-                
+
                 card.addEventListener('click', () => selectMarket(market));
                 marketGrid.appendChild(card);
             });
-            
-            // Поиск рынков
+
+            // Поиск
             document.getElementById('marketSearch').addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase();
                 document.querySelectorAll('.market-card').forEach(card => {
                     const symbol = card.dataset.symbol.toLowerCase();
-                    const isVisible = symbol.includes(searchTerm);
+                    const name = card.dataset.name.toLowerCase();
+                    const isVisible = symbol.includes(searchTerm) || name.includes(searchTerm);
                     card.style.display = isVisible ? 'block' : 'none';
                 });
             });
         }
-        
+
         function selectMarket(market) {
-            terminalState.currentSymbol = market.symbol;
-            terminalState.currentPrice = market.price;
-            
+            // Обновляем состояние
+            TerminalState.currentSymbol = market.symbol;
+            TerminalState.currentSymbolName = market.name;
+            TerminalState.currentPrice = market.price;
+            TerminalState.currentChange = market.change;
+
             // Обновляем UI
+            updateMarketUI(market);
+            
+            // Обновляем график
+            if (TerminalState.tvWidget) {
+                TerminalState.tvWidget.setSymbol(`BINANCE:${market.symbol}`, '15');
+            }
+
+            showNotification(`${market.name} выбран для торговли`, 'info');
+        }
+
+        function updateMarketUI(market) {
             document.getElementById('currentSymbol').textContent = market.symbol;
             document.getElementById('currentPrice').textContent = `$${formatPrice(market.price)}`;
-            document.getElementById('priceChange').textContent = `${market.change >= 0 ? '+' : ''}${market.change}%`;
+            document.getElementById('priceChange').textContent = `${market.change >= 0 ? '+' : ''}${market.change.toFixed(2)}%`;
             document.getElementById('priceChange').className = `price-change ${market.change >= 0 ? 'positive' : 'negative'}`;
             document.getElementById('tradeSymbol').textContent = market.symbol;
-            
+
             // Обновляем активную карточку
             document.querySelectorAll('.market-card').forEach(card => {
                 card.classList.remove('active');
             });
-            event.target.closest('.market-card').classList.add('active');
-            
-            // Обновляем график
-            if (window.tvWidget) {
-                window.tvWidget.setSymbol(`BINANCE:${market.symbol}`, '15');
-            }
-            
-            // Обновляем поля стоп-лосс и тейк-профит
+            event.currentTarget.classList.add('active');
+
+            // Обновляем стоп-уровни
             updateStopLevels(market.price);
-            
-            showNotification(`${market.name} выбран для торговли`);
         }
-        
-        function updateStopLevels(currentPrice) {
-            const stopLossInput = document.getElementById('stopLoss');
-            const takeProfitInput = document.getElementById('takeProfit');
-            
-            const stopLoss = currentPrice * 0.97; // -3%
-            const takeProfit = currentPrice * 1.04; // +4%
-            
-            stopLossInput.value = Math.round(stopLoss);
-            takeProfitInput.value = Math.round(takeProfit);
+
+        function updateMarketPrices() {
+            document.querySelectorAll('.market-card').forEach(card => {
+                const currentPrice = parseFloat(card.dataset.price);
+                const currentChange = parseFloat(card.dataset.change);
+                
+                // Генерируем небольшое изменение цены
+                const changeFactor = (Math.random() - 0.5) * 0.1; // -0.05% до +0.05%
+                const newPrice = currentPrice * (1 + changeFactor / 100);
+                const newChange = currentChange + changeFactor;
+                
+                // Обновляем данные
+                card.dataset.price = newPrice;
+                card.dataset.change = newChange;
+                
+                // Обновляем UI
+                const priceElement = card.querySelector('.market-price');
+                const changeElement = card.querySelector('.market-change');
+                
+                priceElement.textContent = `$${formatPrice(newPrice)}`;
+                changeElement.textContent = `${newChange >= 0 ? '+' : ''}${newChange.toFixed(2)}%`;
+                changeElement.className = `market-change ${newChange >= 0 ? 'positive' : 'negative'}`;
+                
+                // Если это активная карточка, обновляем основной интерфейс
+                if (card.classList.contains('active')) {
+                    TerminalState.currentPrice = newPrice;
+                    TerminalState.currentChange = newChange;
+                    updateMarketUI({
+                        symbol: TerminalState.currentSymbol,
+                        name: TerminalState.currentSymbolName,
+                        price: newPrice,
+                        change: newChange
+                    });
+                }
+            });
         }
-        
-        // ==================== ТОРГОВЛЯ ====================
+
+        // ==================== TRADING ====================
         function selectPositionType(type) {
-            terminalState.positionType = type;
+            TerminalState.positionType = type;
             
             // Обновляем кнопки
             document.querySelectorAll('.position-btn').forEach(btn => {
@@ -1100,18 +1601,37 @@
             
             updateOrderSummary();
         }
-        
+
         function setOrderAmount(percent) {
             const amountInput = document.getElementById('orderAmount');
-            const maxAmount = terminalState.freeBalance;
-            const newAmount = Math.round(maxAmount * (percent / 100));
+            const maxAmount = TerminalState.freeBalance;
+            const newAmount = Math.max(10, Math.round(maxAmount * (percent / 100)));
             amountInput.value = newAmount;
             updateOrderSummary();
         }
-        
+
+        function updateLeverageValue() {
+            const leverageInput = document.getElementById('leverage');
+            const leverageValue = document.getElementById('leverageValue');
+            TerminalState.leverage = parseInt(leverageInput.value);
+            leverageValue.textContent = `${TerminalState.leverage}x`;
+            updateOrderSummary();
+        }
+
+        function updateStopLevels(currentPrice) {
+            const stopLossInput = document.getElementById('stopLoss');
+            const takeProfitInput = document.getElementById('takeProfit');
+            
+            const stopLoss = currentPrice * 0.97; // -3%
+            const takeProfit = currentPrice * 1.04; // +4%
+            
+            stopLossInput.value = formatPrice(stopLoss, 2);
+            takeProfitInput.value = formatPrice(takeProfit, 2);
+        }
+
         function updateOrderSummary() {
             const amount = parseFloat(document.getElementById('orderAmount').value) || 100;
-            const leverage = parseFloat(document.getElementById('leverage').value) || 3;
+            const leverage = TerminalState.leverage;
             
             const margin = amount / leverage;
             const fee = amount * 0.001; // 0.1% комиссия
@@ -1121,16 +1641,22 @@
             document.getElementById('feeAmount').textContent = `$${fee.toFixed(2)}`;
             document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
         }
-        
+
         function placeOrder(event) {
             event.preventDefault();
             
             const amount = parseFloat(document.getElementById('orderAmount').value);
-            const leverage = parseFloat(document.getElementById('leverage').value);
+            const leverage = TerminalState.leverage;
             const stopLoss = parseFloat(document.getElementById('stopLoss').value);
             const takeProfit = parseFloat(document.getElementById('takeProfit').value);
             
-            if (amount > terminalState.freeBalance) {
+            // Проверки
+            if (amount < 10) {
+                showNotification('Минимальный объем - $10', 'error');
+                return;
+            }
+            
+            if (amount > TerminalState.freeBalance) {
                 showNotification('Недостаточно средств', 'error');
                 return;
             }
@@ -1142,24 +1668,32 @@
             // Создаем позицию
             const position = {
                 id: Date.now(),
-                symbol: terminalState.currentSymbol,
-                type: terminalState.positionType,
+                symbol: TerminalState.currentSymbol,
+                symbolName: TerminalState.currentSymbolName,
+                type: TerminalState.positionType,
                 amount: amount,
                 leverage: leverage,
-                entryPrice: terminalState.currentPrice,
-                currentPrice: terminalState.currentPrice,
+                entryPrice: TerminalState.currentPrice,
+                currentPrice: TerminalState.currentPrice,
                 stopLoss: stopLoss,
                 takeProfit: takeProfit,
                 margin: margin,
                 fee: fee,
                 pnl: 0,
                 pnlPercent: 0,
-                timestamp: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString()
             };
             
-            // Обновляем баланс
-            terminalState.freeBalance -= totalCost;
-            terminalState.positions.push(position);
+            // Обновляем состояние
+            TerminalState.freeBalance -= totalCost;
+            TerminalState.positions.push(position);
+            
+            // Добавляем в историю
+            TerminalState.history.push({
+                ...position,
+                action: 'open'
+            });
             
             // Обновляем UI
             updateBalanceDisplay();
@@ -1167,7 +1701,7 @@
             updateOrderSummary();
             
             showNotification(
-                `${position.type.toUpperCase()} позиция ${position.symbol} открыта`,
+                `${position.type.toUpperCase()} ${position.symbol} открыта на $${amount.toFixed(2)}`,
                 'success'
             );
             
@@ -1175,82 +1709,107 @@
             event.target.reset();
             document.getElementById('orderAmount').value = 100;
             document.getElementById('leverage').value = 3;
-            updateStopLevels(terminalState.currentPrice);
+            updateLeverageValue();
+            updateStopLevels(TerminalState.currentPrice);
             selectPositionType('long');
         }
-        
-        // ==================== ПОЗИЦИИ ====================
+
+        // ==================== POSITIONS ====================
         function loadPositions() {
             const positionsList = document.getElementById('positionsList');
+            const positionsCount = document.getElementById('positionsCount');
             
-            if (terminalState.positions.length === 0) {
+            if (TerminalState.positions.length === 0) {
                 positionsList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                        Нет открытых позиций
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 48px; color: var(--gray-3); margin-bottom: 16px;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div style="color: var(--gray-3); font-size: 16px; margin-bottom: 8px;">
+                            Нет открытых позиций
+                        </div>
+                        <div style="color: var(--gray-3); font-size: 14px;">
+                            Откройте свою первую позицию
+                        </div>
                     </div>
                 `;
+                positionsCount.textContent = '0 позиций';
                 return;
             }
             
             positionsList.innerHTML = '';
+            positionsCount.textContent = `${TerminalState.positions.length} позиций`;
             
-            terminalState.positions.forEach(position => {
-                const card = document.createElement('div');
-                card.className = 'position-card';
-                card.dataset.id = position.id;
-                
-                const pnl = position.pnl;
-                const pnlPercent = position.pnlPercent;
-                
-                card.innerHTML = `
-                    <div class="position-card-header">
-                        <div class="position-symbol-info">
-                            <div class="position-symbol">${position.symbol}</div>
-                            <div class="position-type ${position.type}">${position.type.toUpperCase()} ${position.leverage}x</div>
-                        </div>
-                        <div class="position-pnl ${pnl >= 0 ? 'positive' : 'negative'}">
-                            ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent >= 0 ? '+' : ''}${pnlPercent.toFixed(2)}%)
-                        </div>
-                    </div>
-                    
-                    <div class="position-stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Объем</div>
-                            <div class="stat-value">$${position.amount.toFixed(2)}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Вход</div>
-                            <div class="stat-value">$${position.entryPrice.toFixed(2)}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Текущая</div>
-                            <div class="stat-value">$${position.currentPrice.toFixed(2)}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Маржа</div>
-                            <div class="stat-value">$${position.margin.toFixed(2)}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="position-actions">
-                        <button class="action-btn" onclick="addToPosition(${position.id})">ДОБАВИТЬ</button>
-                        <button class="action-btn close" onclick="closePosition(${position.id})">ЗАКРЫТЬ</button>
-                    </div>
-                `;
-                
+            TerminalState.positions.forEach(position => {
+                const card = createPositionCard(position);
                 positionsList.appendChild(card);
             });
         }
-        
+
+        function createPositionCard(position) {
+            const card = document.createElement('div');
+            card.className = 'position-card';
+            card.dataset.id = position.id;
+            
+            const pnl = position.pnl;
+            const pnlPercent = position.pnlPercent;
+            const pnlClass = pnl >= 0 ? 'positive' : 'negative';
+            const pnlSign = pnl >= 0 ? '+' : '';
+            
+            card.innerHTML = `
+                <div class="position-header">
+                    <div class="position-info">
+                        <div class="position-symbol">${position.symbol}</div>
+                        <div class="position-type ${position.type}">${position.type.toUpperCase()}</div>
+                        <div class="position-leverage">${position.leverage}x</div>
+                    </div>
+                    <div class="position-pnl ${pnlClass}">
+                        ${pnlSign}$${pnl.toFixed(2)} (${pnlSign}${pnlPercent.toFixed(2)}%)
+                    </div>
+                </div>
+                
+                <div class="position-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Объем</div>
+                        <div class="detail-value">$${position.amount.toFixed(2)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Вход</div>
+                        <div class="detail-value">$${position.entryPrice.toFixed(2)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Текущая</div>
+                        <div class="detail-value">$${position.currentPrice.toFixed(2)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Маржа</div>
+                        <div class="detail-value">$${position.margin.toFixed(2)}</div>
+                    </div>
+                </div>
+                
+                <div class="position-actions">
+                    <button class="action-btn" onclick="addToPosition(${position.id})">
+                        <i class="fas fa-plus"></i> ДОБАВИТЬ
+                    </button>
+                    <button class="action-btn close" onclick="closePosition(${position.id})">
+                        <i class="fas fa-times"></i> ЗАКРЫТЬ
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
         function updatePositionsPnL() {
-            if (terminalState.positions.length === 0) return;
+            if (TerminalState.positions.length === 0) return;
             
-            let totalDailyPnl = 0;
+            let totalPnL = 0;
             
-            terminalState.positions.forEach(position => {
-                // Симулируем изменение цены
-                const randomChange = (Math.random() - 0.5) * 2; // -1% до +1%
-                const newPrice = position.currentPrice * (1 + randomChange / 100);
+            TerminalState.positions.forEach(position => {
+                // Генерируем изменение цены
+                const volatility = position.symbol.includes('BTC') ? 0.5 : 0.8;
+                const changeFactor = (Math.random() - 0.5) * volatility;
+                const newPrice = position.currentPrice * (1 + changeFactor / 100);
                 position.currentPrice = newPrice;
                 
                 // Рассчитываем PNL
@@ -1261,71 +1820,43 @@
                     pnl = (position.entryPrice - newPrice) * (position.amount / position.entryPrice);
                 }
                 
-                // Умножаем на кредитное плечо
+                // Учитываем кредитное плечо
                 pnl *= position.leverage;
                 position.pnl = pnl;
                 position.pnlPercent = (pnl / position.margin) * 100;
                 
-                // Проверяем стоп-лосс и тейк-профит
-                if (position.type === 'long') {
-                    if (newPrice <= position.stopLoss || newPrice >= position.takeProfit) {
-                        closePosition(position.id, 'auto');
-                    }
-                } else {
-                    if (newPrice >= position.stopLoss || newPrice <= position.takeProfit) {
-                        closePosition(position.id, 'auto');
-                    }
+                // Проверяем стопы
+                if ((position.type === 'long' && newPrice <= position.stopLoss) ||
+                    (position.type === 'short' && newPrice >= position.stopLoss)) {
+                    closePosition(position.id, 'stop');
                 }
                 
-                totalDailyPnl += pnl;
+                if ((position.type === 'long' && newPrice >= position.takeProfit) ||
+                    (position.type === 'short' && newPrice <= position.takeProfit)) {
+                    closePosition(position.id, 'take');
+                }
+                
+                totalPnL += pnl;
             });
             
             // Обновляем баланс
-            terminalState.dailyPnl = totalDailyPnl;
-            terminalState.balance = 10000 + totalDailyPnl; // Стартовый баланс + PNL
+            TerminalState.dailyPnl = totalPnL;
+            TerminalState.balance = 10000 + totalPnL; // Стартовый баланс + PNL
+            TerminalState.freeBalance = TerminalState.balance - 
+                TerminalState.positions.reduce((sum, pos) => sum + pos.margin, 0);
             
             // Обновляем UI
             updateBalanceDisplay();
             loadPositions();
         }
-        
-        function closePosition(positionId, source = 'manual') {
-            const positionIndex = terminalState.positions.findIndex(p => p.id === positionId);
-            if (positionIndex === -1) return;
-            
-            const position = terminalState.positions[positionIndex];
-            const pnl = position.pnl;
-            
-            // Возвращаем маржу и добавляем PNL
-            terminalState.freeBalance += position.margin + pnl;
-            
-            // Удаляем позицию
-            terminalState.positions.splice(positionIndex, 1);
-            
-            // Обновляем UI
-            updateBalanceDisplay();
-            loadPositions();
-            
-            if (source === 'auto') {
-                showNotification(
-                    `${position.symbol} закрыт по ${pnl >= 0 ? 'тейк-профиту' : 'стоп-лоссу'}`,
-                    pnl >= 0 ? 'success' : 'error'
-                );
-            } else {
-                showNotification(
-                    `Позиция ${position.symbol} закрыта. PNL: $${pnl.toFixed(2)}`,
-                    pnl >= 0 ? 'success' : 'error'
-                );
-            }
-        }
-        
+
         function addToPosition(positionId) {
-            const position = terminalState.positions.find(p => p.id === positionId);
+            const position = TerminalState.positions.find(p => p.id === positionId);
             if (!position) return;
             
             const addAmount = 50; // USDT
-            if (addAmount > terminalState.freeBalance) {
-                showNotification('Недостаточно средств для добавления', 'error');
+            if (addAmount > TerminalState.freeBalance) {
+                showNotification('Недостаточно средств', 'error');
                 return;
             }
             
@@ -1336,102 +1867,276 @@
             position.margin += additionalMargin;
             position.fee += fee;
             
-            terminalState.freeBalance -= (additionalMargin + fee);
+            TerminalState.freeBalance -= (additionalMargin + fee);
+            
+            // Добавляем в историю
+            TerminalState.history.push({
+                id: Date.now(),
+                symbol: position.symbol,
+                action: 'add',
+                amount: addAmount,
+                price: position.currentPrice,
+                timestamp: new Date().toLocaleTimeString()
+            });
             
             updateBalanceDisplay();
             loadPositions();
-            showNotification(`Добавлено $${addAmount} к позиции ${position.symbol}`);
+            showNotification(`Добавлено $${addAmount} к ${position.symbol}`, 'info');
         }
-        
-        // ==================== УТИЛИТЫ ====================
+
+        function closePosition(positionId, reason = 'manual') {
+            const positionIndex = TerminalState.positions.findIndex(p => p.id === positionId);
+            if (positionIndex === -1) return;
+            
+            const position = TerminalState.positions[positionIndex];
+            const pnl = position.pnl;
+            
+            // Возвращаем маржу и добавляем PNL
+            TerminalState.freeBalance += position.margin + pnl;
+            
+            // Добавляем в историю
+            TerminalState.history.push({
+                ...position,
+                action: 'close',
+                closeReason: reason,
+                closePrice: position.currentPrice,
+                closeTimestamp: new Date().toLocaleTimeString()
+            });
+            
+            // Удаляем позицию
+            TerminalState.positions.splice(positionIndex, 1);
+            
+            // Обновляем UI
+            updateBalanceDisplay();
+            loadPositions();
+            
+            let message = '';
+            if (reason === 'stop') {
+                message = `${position.symbol} закрыт по стоп-лоссу`;
+            } else if (reason === 'take') {
+                message = `${position.symbol} закрыт по тейк-профиту`;
+            } else {
+                message = `${position.symbol} закрыт`;
+            }
+            
+            message += `. PNL: ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`;
+            
+            showNotification(message, pnl >= 0 ? 'success' : 'error');
+        }
+
+        // ==================== UTILITIES ====================
         function updateBalanceDisplay() {
-            document.getElementById('totalBalance').textContent = `$${terminalState.balance.toFixed(2)}`;
+            document.getElementById('totalBalance').textContent = `$${TerminalState.balance.toFixed(2)}`;
+            document.getElementById('availableBalance').textContent = `$${TerminalState.freeBalance.toFixed(2)}`;
             
             const dailyPnlEl = document.getElementById('dailyPnl');
-            dailyPnlEl.textContent = `${terminalState.dailyPnl >= 0 ? '+' : ''}$${terminalState.dailyPnl.toFixed(2)}`;
-            dailyPnlEl.className = `balance-value ${terminalState.dailyPnl >= 0 ? 'positive' : 'negative'}`;
+            dailyPnlEl.textContent = `${TerminalState.dailyPnl >= 0 ? '+' : ''}$${TerminalState.dailyPnl.toFixed(2)}`;
+            dailyPnlEl.className = `balance-value ${TerminalState.dailyPnl >= 0 ? 'positive' : 'negative'}`;
         }
-        
-        function updatePrices() {
-            // Симуляция изменения цен на рынках
-            document.querySelectorAll('.market-card').forEach(card => {
-                const currentPrice = parseFloat(card.dataset.price);
-                const change = parseFloat(card.dataset.change);
-                
-                // Небольшое случайное изменение
-                const randomChange = (Math.random() - 0.5) * 0.2; // -0.1% до +0.1%
-                const newPrice = currentPrice * (1 + randomChange / 100);
-                const newChange = change + randomChange;
-                
-                card.dataset.price = newPrice;
-                card.dataset.change = newChange;
-                
-                if (card.classList.contains('active')) {
-                    terminalState.currentPrice = newPrice;
-                    document.getElementById('currentPrice').textContent = `$${formatPrice(newPrice)}`;
-                    
-                    const priceChangeEl = document.getElementById('priceChange');
-                    priceChangeEl.textContent = `${newChange >= 0 ? '+' : ''}${newChange.toFixed(2)}%`;
-                    priceChangeEl.className = `price-change ${newChange >= 0 ? 'positive' : 'negative'}`;
-                }
-                
-                // Обновляем отображение цены
-                const priceElement = card.querySelector('.market-price');
-                const changeElement = card.querySelector('.market-change');
-                
-                priceElement.textContent = `$${formatPrice(newPrice)}`;
-                changeElement.textContent = `${newChange >= 0 ? '+' : ''}${newChange.toFixed(2)}%`;
-                changeElement.className = `market-change ${newChange >= 0 ? 'positive' : 'negative'}`;
-            });
-        }
-        
-        function formatPrice(price) {
+
+        function formatPrice(price, decimals = null) {
+            if (decimals !== null) {
+                return price.toFixed(decimals);
+            }
+            
             if (price >= 1000) {
                 return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             } else if (price >= 1) {
                 return price.toFixed(2);
-            } else {
+            } else if (price >= 0.01) {
                 return price.toFixed(4);
+            } else {
+                return price.toFixed(6);
             }
         }
-        
+
         function switchTab(tabName) {
-            // Обновляем кнопки вкладок
-            document.querySelectorAll('.trade-tab').forEach(tab => {
+            // Обновляем активную вкладку
+            document.querySelectorAll('.trade-tab').forEach((tab, index) => {
                 tab.classList.remove('active');
+                if ((tabName === 'order' && index === 0) ||
+                    (tabName === 'positions' && index === 1) ||
+                    (tabName === 'history' && index === 2)) {
+                    tab.classList.add('active');
+                }
             });
-            document.querySelector(`.trade-tab:nth-child(${tabName === 'order' ? 1 : 2})`).classList.add('active');
             
-            // Показываем соответствующую вкладку
+            // Показываем соответствующий контент
             document.getElementById('orderTab').style.display = tabName === 'order' ? 'block' : 'none';
             document.getElementById('positionsTab').style.display = tabName === 'positions' ? 'block' : 'none';
+            document.getElementById('historyTab').style.display = tabName === 'history' ? 'block' : 'none';
+            
+            // Если открываем историю - загружаем ее
+            if (tabName === 'history') {
+                loadHistory();
+            }
         }
-        
+
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (TerminalState.history.length === 0) {
+                return;
+            }
+            
+            // Показываем последние 10 сделок
+            const recentHistory = TerminalState.history.slice(-10).reverse();
+            
+            historyList.innerHTML = '';
+            recentHistory.forEach(record => {
+                const item = document.createElement('div');
+                item.className = 'position-card';
+                
+                const isOpen = record.action === 'open';
+                const isClose = record.action === 'close';
+                const isAdd = record.action === 'add';
+                
+                let content = '';
+                if (isOpen) {
+                    content = `
+                        <div class="position-header">
+                            <div class="position-info">
+                                <div class="position-symbol">${record.symbol}</div>
+                                <div class="position-type ${record.type}">OPEN ${record.type.toUpperCase()}</div>
+                            </div>
+                            <div class="position-pnl">$${record.amount.toFixed(2)}</div>
+                        </div>
+                        <div class="position-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Цена входа</div>
+                                <div class="detail-value">$${record.entryPrice.toFixed(2)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Плечо</div>
+                                <div class="detail-value">${record.leverage}x</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Время</div>
+                                <div class="detail-value">${record.timestamp}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Дата</div>
+                                <div class="detail-value">${record.date}</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (isClose) {
+                    const pnl = record.pnl;
+                    const pnlClass = pnl >= 0 ? 'positive' : 'negative';
+                    const pnlSign = pnl >= 0 ? '+' : '';
+                    
+                    content = `
+                        <div class="position-header">
+                            <div class="position-info">
+                                <div class="position-symbol">${record.symbol}</div>
+                                <div class="position-type ${record.type}">CLOSE ${record.type.toUpperCase()}</div>
+                            </div>
+                            <div class="position-pnl ${pnlClass}">
+                                ${pnlSign}$${pnl.toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="position-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Причина</div>
+                                <div class="detail-value">${record.closeReason === 'stop' ? 'Стоп-лосс' : 
+                                                          record.closeReason === 'take' ? 'Тейк-профит' : 'Вручную'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Цена выхода</div>
+                                <div class="detail-value">$${record.closePrice.toFixed(2)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Время</div>
+                                <div class="detail-value">${record.closeTimestamp}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">PNL %</div>
+                                <div class="detail-value ${pnlClass}">${pnlSign}${record.pnlPercent.toFixed(2)}%</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (isAdd) {
+                    content = `
+                        <div class="position-header">
+                            <div class="position-info">
+                                <div class="position-symbol">${record.symbol}</div>
+                                <div class="position-type info">ADD FUNDS</div>
+                            </div>
+                            <div class="position-pnl">+$${record.amount.toFixed(2)}</div>
+                        </div>
+                        <div class="position-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Тип</div>
+                                <div class="detail-value">Добавление средств</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Цена</div>
+                                <div class="detail-value">$${record.price.toFixed(2)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Время</div>
+                                <div class="detail-value">${record.timestamp}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Дата</div>
+                                <div class="detail-value">${new Date().toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                item.innerHTML = content;
+                historyList.appendChild(item);
+            });
+        }
+
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
             notification.textContent = message;
+            notification.className = `notification ${type}`;
             notification.style.display = 'block';
             
-            // Цвет в зависимости от типа
-            if (type === 'error') {
-                notification.style.borderColor = 'var(--danger)';
-                notification.style.background = 'linear-gradient(135deg, rgba(255, 51, 102, 0.1) 0%, rgba(255, 51, 102, 0.05) 100%)';
-            } else if (type === 'success') {
-                notification.style.borderColor = 'var(--success)';
-                notification.style.background = 'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 136, 0.05) 100%)';
-            } else {
-                notification.style.borderColor = 'var(--primary)';
-                notification.style.background = 'var(--gradient-card)';
-            }
-            
+            // Автоматическое скрытие
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
         }
-        
-        // Инициализация событий
-        document.getElementById('orderAmount').addEventListener('input', updateOrderSummary);
-        document.getElementById('leverage').addEventListener('input', updateOrderSummary);
+
+        function initEventListeners() {
+            // Обновление суммы ордера
+            document.getElementById('orderAmount').addEventListener('input', updateOrderSummary);
+            
+            // Обновление кредитного плеча
+            document.getElementById('leverage').addEventListener('input', updateLeverageValue);
+            
+            // Обработка процентов
+            document.querySelectorAll('.percent-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.percent-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Полноэкранный режим
+            document.addEventListener('fullscreenchange', function() {
+                if (TerminalState.tvWidget) {
+                    setTimeout(() => TerminalState.tvWidget.resize(), 100);
+                }
+            });
+        }
+
+        // Экспорт функций для глобального использования
+        window.selectMarket = selectMarket;
+        window.selectPositionType = selectPositionType;
+        window.setOrderAmount = setOrderAmount;
+        window.updateLeverageValue = updateLeverageValue;
+        window.placeOrder = placeOrder;
+        window.addToPosition = addToPosition;
+        window.closePosition = closePosition;
+        window.switchTab = switchTab;
+        window.refreshChart = refreshChart;
+        window.toggleFullscreen = toggleFullscreen;
+        window.toggleTheme = toggleTheme;
     </script>
 </body>
 </html>
